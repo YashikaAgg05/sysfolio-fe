@@ -1,159 +1,535 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>SYSFOLIO | Buy Shares</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-  <div class="container mt-4">
-    <h1 class="text-center">Buy Shares</h1>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mt-3">
-      <a class="navbar-brand" href="#">Menu</a>
-      <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" href="share.html">Share Knowledge</a></li>
-        <li class="nav-item"><a class="nav-link" href="crud.html">CRUD</a></li>
-        <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
-      </ul>
-    </nav>
-
-    <form id="buyForm" class="mt-4">
-      <div class="mb-3">
-        <label for="company" class="form-label">Company Name</label>
-        <select id="company" class="form-select" required></select>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Symbol</label>
-        <input type="text" id="symbol" class="form-control" readonly>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Current Price</label>
-        <input type="text" id="current_price" class="form-control" readonly>
-      </div>
-      <div class="mb-3">
-        <label for="sector" class="form-label">Sector</label>
-        <select id="sector" class="form-select">
-          <option>IT</option>
-          <option>Finance</option>
-          <option>Energy</option>
-          <option>Pharma</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="quantity" class="form-label">Quantity</label>
-        <input type="number" id="quantity" class="form-control" required>
-      </div>
-      <button class="btn btn-primary" type="submit">Buy</button>
-    </form>
-
-    <div id="cards" class="row mt-4"></div>
-  </div>
-
-  <script src="js/crud.js"></script>
-
-
-
-
-  
-</body>
-</html> -->
+<!-- 
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Buy Shares - Sysfolio</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buy Stock | SYSFOLIO</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      background: #f8f9fa;
+      color: #212529;
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      padding: 1rem 2vw;
+      border-bottom: 1px solid #e9ecef;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar .brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2493fb;
+      letter-spacing: 1px;
+    }
+    .navbar nav a {
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 500;
+      color: #222;
+      padding-bottom: 5px;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+    .navbar nav a.active,
+    .navbar nav a:hover {
+      color: #2493fb;
+      border-color: #2493fb;
+    }
+
+    .crud-main {
+      max-width: 680px;
+      margin: 35px auto 80px auto;
+      padding: 0 2vw;
+    }
+    form.crud-form {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(36, 147, 251, 0.04);
+      padding: 32px 28px 25px 28px;
+      margin-bottom: 40px;
+      border: 1px solid #e6ecfa;
+    }
+    form.crud-form h2 {
+      text-align: center;
+      font-weight: 700;
+      color: #23395d;
+      margin-bottom: 24px;
+      letter-spacing: 0.4px;
+    }
+    form.crud-form label {
+      font-weight: 600;
+      margin-bottom: 7px;
+      display: block;
+      color: #3d4257;
+      font-size: 0.97rem;
+    }
+    form.crud-form input,
+    form.crud-form select {
+      width: 100%;
+      padding: 9px 13px;
+      margin-bottom: 16px;
+      border: 1px solid #dbeafe;
+      border-radius: 7px;
+      font-size: 1rem;
+      background: #f6f9ff;
+      transition: border-color 0.16s ease;
+    }
+    form.crud-form input:focus,
+    form.crud-form select:focus {
+      border-color: #2493fb;
+      outline: none;
+    }
+    form.crud-form button {
+      width: 100%;
+      padding: 12px 0;
+      background: linear-gradient(92deg, #2493fb 70%, #67e8f9 100%);
+      border: none;
+      border-radius: 7px;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+      cursor: pointer;
+      margin-top: 7px;
+      box-shadow: 0 2px 8px rgba(36, 147, 251, 0.11);
+      transition: background 0.16s ease;
+    }
+    form.crud-form button:hover {
+      background: linear-gradient(92deg, #1472db 80%, #31b4cd 100%);
+    }
+
+    .crud-list-section h3 {
+      color: #23395d;
+      font-weight: 600;
+      margin-bottom: 19px;
+      text-align: center;
+      letter-spacing: 0.4px;
+    }
+    .cards-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px 16px;
+    }
+    @media (max-width: 700px) {
+      .crud-main {
+        max-width: 99vw;
+      }
+      .cards-list {
+        grid-template-columns: 1fr;
+      }
+      form.crud-form {
+        padding: 18px 3vw 15px 3vw;
+      }
+    }
+    .crud-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 22px 20px 14px 22px;
+      box-shadow: 0 2px 22px rgba(36, 147, 251, 0.07);
+      border: 1.4px solid #e6ecfa;
+      transition: box-shadow 0.17s ease, border-color 0.17s ease;
+      cursor: default;
+      min-height: 130px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .crud-card:hover {
+      box-shadow: 0 8px 38px rgba(36, 147, 251, 0.17);
+      border-color: #b8daf7;
+    }
+    .symbol-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .symbol {
+      color: #2493fb;
+      font-weight: 700;
+      font-size: 1.04em;
+      letter-spacing: 0.8px;
+    }
+    .sector {
+      background: #e0f2fc;
+      padding: 1.5px 8px;
+      border-radius: 5px;
+      font-weight: 500;
+      font-size: 0.93em;
+      color: #2199be;
+      margin-left: 5px;
+      letter-spacing: 0.2px;
+      user-select: none;
+    }
+    .company {
+      font-weight: 600;
+      font-size: 1.03rem;
+      letter-spacing: 0.8px;
+      color: #1b2e54;
+      margin-bottom: 5px;
+    }
+    .info-row {
+      color: #476088;
+      font-size: 0.97em;
+      margin-bottom: 1px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .amount {
+      color: #2356ad;
+      font-weight: 600;
+      font-size: 1.02em;
+      margin-top: 8px;
+    }
+    .remarks {
+      margin-top: 7px;
+      font-style: italic;
+      color: #878a99;
+      font-size: 0.97em;
+    }
+  </style>
 </head>
-<body class="bg-light">
-  <!-- Navbar (same for all pages) -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Sysfolio</a>
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="share.html">Share Knowledge</a></li>
-          <li class="nav-item"><a class="nav-link active" href="crud.html">CRUD</a></li>
-          <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+<body>
+  <header class="navbar">
+    <div class="brand">SYSFOLIO</div>
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a href="crud.html" class="active">Buy Stock</a>
+      <a href="share.html">Share</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
 
-  <!-- Buy Shares Form -->
-  <div class="container my-5">
-    <h2 class="mb-4 text-center">Buy Shares</h2>
-    <form id="buyForm" class="border p-4 bg-white shadow-sm rounded">
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="company" class="form-label">Company</label>
-          <select id="company" class="form-select" required>
-            <option value="">--Select--</option>
-            <option value="Apple Inc.">Apple Inc.</option>
-            <option value="Amazon.com Inc.">Amazon.com Inc.</option>
-            <option value="Microsoft Corp.">Microsoft Corp.</option>
-            <option value="Alphabet Inc.">Alphabet Inc.</option>
-            <option value="Tesla Inc.">Tesla Inc.</option>
-          </select>
-        </div>
+  <main class="crud-main">
+    <form id="buyForm" class="crud-form" autocomplete="off" novalidate>
+      <h2>Buy Stock</h2>
 
-        <!-- <div class="col-md-6 mb-3">
-          <label for="symbol" class="form-label">Symbol</label>
-          <input type="text" id="symbol" class="form-control" readonly />
-        </div> -->
+      <label for="company">Company Name</label>
+      <input type="text" id="company" name="company" placeholder="Eg. Apple Inc" required />
 
-        <div class="col-md-6 mb-3">
-          <label for="sector" class="form-label">Sector</label>
-          <select id="sector" class="form-select" required>
-            <option value="">--Select--</option>
-            <option value="IT">IT</option>
-            <option value="Retail">Retail</option>
-            <option value="Tech">Tech</option>
-            <option value="Automobile">Automobile</option>
-          </select>
-        </div>
+      <label for="symbol">Symbol</label>
+      <input type="text" id="symbol" name="symbol" placeholder="Eg. AAPL" required />
 
-        <div class="col-md-6 mb-3">
-          <label for="price" class="form-label">Price</label>
-          <input type="number" step="0.01" id="price" class="form-control" required />
-        </div>
+      <label for="sector">Sector</label>
+      <select id="sector" name="sector" required>
+        <option value="">Select Sector</option>
+        <option>Technology</option>
+        <option>Finance</option>
+        <option>Healthcare</option>
+        <option>Energy</option>
+        <option>Consumer</option>
+        <option>Industrials</option>
+        <option>Other</option>
+      </select>
 
-        <div class="col-md-6 mb-3">
-          <label for="quantity" class="form-label">Quantity</label>
-          <input type="number" id="quantity" class="form-control" required />
-        </div>
+      <label for="price">Price per Share</label>
+      <input type="number" id="price" name="price" min="0" step="0.01" required />
 
-        <div class="col-md-6 mb-3">
-          <label for="date" class="form-label">Date</label>
-          <input type="date" id="date" class="form-control" required />
-        </div>
+      <label for="quantity">Quantity</label>
+      <input type="number" id="quantity" name="quantity" min="1" required />
 
-        <div class="col-12 mb-3">
-          <label for="remarks" class="form-label">Remarks</label>
-          <input type="text" id="remarks" class="form-control" />
-        </div>
-      </div>
+      <label for="date">Date</label>
+      <input type="date" id="date" name="date" required />
 
-      <button type="submit" class="btn btn-primary w-100">Buy</button>
+      <label for="remarks">Remarks</label>
+      <input type="text" id="remarks" name="remarks" placeholder="Optional" />
+
+      <button type="submit">Buy</button>
     </form>
-  </div>
 
-  <!-- Bought Shares Card Container -->
-  <div class="container">
-    <h3 class="mb-3">Your Recent Buys</h3>
-    <div id="cardContainer" class="row g-3">
-      <!-- Cards will appear here -->
-    </div>
-  </div>
+    <section class="crud-list-section">
+      <h3>Bought Stocks</h3>
+      <div id="investmentCards" class="cards-list">
+      </div>
+    </section>
+  </main>
 
-  <!-- Script -->
+  <script src="js/crud.js"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buy Stock | SYSFOLIO</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      background: #181c21;
+      color: #e7eaf3;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #21232a;
+      padding: 1rem 2vw;
+      border-bottom: 1px solid #262b34;
+      box-shadow: 0 2px 8px rgba(18,24,51,0.18);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar .brand {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #4cc0ff;
+      letter-spacing: 1px;
+    }
+    .navbar nav a {
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: 500;
+      color: #d0e9ff;
+      padding-bottom: 5px;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .navbar nav a.active,
+    .navbar nav a:hover {
+      color: #4cc0ff;
+      border-color: #4cc0ff;
+    }
+
+    .crud-main {
+      max-width: 680px;
+      margin: 40px auto 80px auto;
+      padding: 0 2vw;
+    }
+    form.crud-form {
+      background: #20232a;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(76,192,255,0.07);
+      padding: 32px 28px 25px 28px;
+      margin-bottom: 40px;
+      border: 1px solid #262b34;
+    }
+    form.crud-form h2 {
+      text-align: center;
+      color: #4cc0ff;
+      margin-bottom: 28px;
+      font-weight: 700;
+      letter-spacing: .4px;
+    }
+    form.crud-form label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      margin-top: 13px;
+      display: block;
+      color: #9ecbfb;
+      font-size: 0.98rem;
+    }
+    form.crud-form select,
+    form.crud-form input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 11px 14px;
+      margin-bottom: 7px;
+      border: 1.2px solid #2a3241;
+      border-radius: 7px;
+      font-size: 1rem;
+      background: #14171c;
+      color: #f3f7ff;
+      transition: border-color 0.15s;
+    }
+    form.crud-form input[readonly] {
+      color: #bababa;
+      background: #1b1c1f;
+      cursor: not-allowed;
+    }
+    form.crud-form select:focus,
+    form.crud-form input:focus {
+      outline: none;
+      border-color: #4cc0ff;
+    }
+    .price-badge {
+      display: block;
+      margin: 6px 0 2px 0;
+      color: #b9e4ff;
+      font-size: 1.1em;
+    }
+    form.crud-form button {
+      width: 100%;
+      padding: 13px 0;
+      background: linear-gradient(92deg,#187bc2 50%, #4cc0ff 100%);
+      border: none;
+      border-radius: 7px;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 2px 8px rgba(76,192,255,0.11);
+      transition: background 0.16s;
+    }
+    form.crud-form button:hover {
+      background: linear-gradient(92deg, #155987 70%, #187bc2 100%);
+    }
+
+    .crud-list-section h3 {
+      color: #4cc0ff;
+      font-weight: 600;
+      margin-bottom: 19px;
+      text-align: center;
+      letter-spacing: 0.4px;
+    }
+    .cards-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px 16px;
+    }
+    @media (max-width: 700px) {
+      .crud-main {
+        max-width: 99vw;
+      }
+      .cards-list {
+        grid-template-columns: 1fr;
+      }
+      form.crud-form {
+        padding: 18px 3vw 15px 3vw;
+      }
+    }
+    .crud-card {
+      background: #232733;
+      border-radius: 16px;
+      padding: 22px 20px 14px 22px;
+      box-shadow: 0 2px 18px rgba(56,179,255,0.06);
+      border: 1.3px solid #2b3b4f;
+      min-height: 130px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      transition: box-shadow 0.17s, border-color 0.17s;
+    }
+    .crud-card:hover {
+      box-shadow: 0 8px 38px rgba(76,192,255,0.14);
+      border-color: #4899df;
+    }
+    .symbol-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 3px;
+    }
+    .symbol {
+      color: #4cc0ff;
+      font-weight: 700;
+      font-size: 1.08em;
+      letter-spacing: 0.7px;
+    }
+    .sector {
+      background: #193245;
+      padding: 1.5px 8px;
+      border-radius: 5px;
+      font-weight: 500;
+      font-size: 0.89em;
+      color: #88cdf6;
+      margin-left: 6px;
+      user-select: none;
+    }
+    .company {
+      font-weight: 600;
+      font-size: 1.03rem;
+      color: #e0e6ee;
+      margin-bottom: 5px;
+    }
+    .info-row {
+      color: #8eb5da;
+      font-size: 0.97em;
+      margin-bottom: 1px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .amount {
+      color: #2eace4;
+      font-weight: 600;
+      font-size: 1.02em;
+      margin-top: 8px;
+    }
+    .remarks {
+      margin-top: 7px;
+      font-style: italic;
+      color: #768dab;
+      font-size: 0.97em;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="brand">SYSFOLIO</div>
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a href="crud.html" class="active">Buy Stock</a>
+      <a href="share.html">Share</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main class="crud-main">
+    <form id="buyForm" class="crud-form" autocomplete="off" novalidate>
+      <h2>Buy Stock</h2>
+
+      <label for="company">Select Company</label>
+      <select id="company" name="company" required></select>
+      
+      <input type="hidden" id="symbol" name="symbol" />
+
+      <label for="company-symbol" style="margin-top: 5px;">Symbol</label>
+      <input type="text" id="company-symbol" readonly placeholder="Symbol will autofill" />
+
+      <span id="livePrice" class="price-badge">Current Price: —</span>
+
+      <label for="sector">Sector</label>
+      <select id="sector" name="sector" required>
+        <option value="">Select Sector</option>
+        <option>Technology</option>
+        <option>Finance</option>
+        <option>Healthcare</option>
+        <option>Energy</option>
+        <option>Consumer</option>
+        <option>Industrials</option>
+        <option>Other</option>
+      </select>
+
+      <label for="price">Price per Share</label>
+      <input type="number" id="price" name="price" min="0" step="0.01" readonly required />
+
+      <label for="quantity">Quantity</label>
+      <input type="number" id="quantity" name="quantity" min="1" required />
+
+      <label for="date">Date</label>
+      <input type="date" id="date" name="date" required />
+
+      <label for="remarks">Remarks</label>
+      <input type="text" id="remarks" name="remarks" placeholder="Optional" />
+
+      <button type="submit">Buy</button>
+    </form>
+
+    <section class="crud-list-section">
+      <h3>Bought Stocks</h3>
+      <div id="investmentCards" class="cards-list"></div>
+    </section>
+  </main>
+
   <script src="js/crud.js"></script>
 </body>
 </html>
-
-
-
